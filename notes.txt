@@ -1,0 +1,8 @@
+Retrieving File Metadata
+https://stackoverflow.com/questions/34080959/reading-basic-file-attributes-in-scala
+
+
+Retrieving Picture Metadata:
+https://index.scala-lang.org/sksamuel/scrimage/scrimage-core/2.1.8?target=_2.12
+
+Allows to pull special metadata from picture files possibly
