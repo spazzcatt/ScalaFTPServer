@@ -13,8 +13,18 @@ class ServerSocketAcceptor {
   var readerList = new ListBuffer[ServerReader]()
   println("ServerSocketClass Created")
 
+  import java.io.BufferedReader
+  import java.io.InputStreamReader
+  import java.net.URL
 
-    def startServer(): Unit ={
+  val whatismyip = new URL("http://checkip.amazonaws.com")
+  val in = new BufferedReader(new InputStreamReader(whatismyip.openStream))
+
+  val ip: String = in.readLine //you get the IP as a String
+  println("External IP address: " + ip)
+
+
+  def startServer(): Unit ={
       println(s"Attempting to accept connections on port: $port")
       while(true){
         val server = serverSocket.accept();

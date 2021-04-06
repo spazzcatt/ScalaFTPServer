@@ -5,7 +5,8 @@ package StandardFTP
  * It uses Java ServerSockets since Scala has no built in networking
  */
 class FTPServer {
-  def main(args: Array[String]): Unit = {
+
+  def main(): Unit = {
       val serverSocketAcceptor = new ServerSocketAcceptor
       serverSocketAcceptor.startServer()
       while(serverSocketAcceptor.readerList.isEmpty){
@@ -23,7 +24,7 @@ class FTPServer {
 
   /**
    * Handle what input you would like
-   * @param input
+   * @param input the message you woule like to handle
    */
   def messageHandler(input : String, serverReader: ServerReader): Unit ={
     input match {
