@@ -27,10 +27,12 @@ class ServerSocketAcceptor {
   def startServer(): Unit ={
       println(s"Attempting to accept connections on port: $port")
       while(true){
-        val server = serverSocket.accept();
-        val currentThread = new ServerReader(server)
-        currentThread.run()
-        readerList.addOne(currentThread)
+        val server = serverSocket.accept()
+        if(server != null) {
+          val currentThread = new ServerReader(server)
+          currentThread.run()
+          readerList.addOne(currentThread)
+        }
       }
     }
   def getReaderList(): ListBuffer[ServerReader] ={

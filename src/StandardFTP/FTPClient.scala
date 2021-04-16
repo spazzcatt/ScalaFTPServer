@@ -1,10 +1,9 @@
 package StandardFTP
 
-class FTPClient {
-  def main(args: Array[String]): Unit = {
-    println("args: ")
-    args.foreach(f => println(f))
+import java.net.Socket
 
-  }
+class FTPClient (args: List[String]){
+  val socket = new Socket(args(0), args(1).toInt))
+  
 
 }
