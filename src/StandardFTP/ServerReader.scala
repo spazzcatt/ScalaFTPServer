@@ -16,6 +16,7 @@ class ServerReader(val socketInput : Socket) extends Thread{
       if(temp != ""){
         incomingMessage = temp
         messageQueue.addOne(incomingMessage)
+        println(s"read: $temp")
       }
     }
     socket.close()
