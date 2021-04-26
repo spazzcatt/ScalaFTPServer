@@ -6,7 +6,7 @@ import java.io.{BufferedReader, File, InputStreamReader, PrintWriter}
 import java.net.URL
 
 /**
- * A FTP server client. It accepts new connections and
+ * A FTP serverside. It accepts new connections and handles arguments
  */
 
 object ScalaFTPServerObject {
@@ -17,7 +17,10 @@ object ScalaFTPServerObject {
   val in = new BufferedReader(new InputStreamReader(whatismyip.openStream))
   val ip: String = in.readLine //you get the IP as a String
 
-
+  /**
+   * Starts server and gets external IP address
+   * Infinitely Accepts connections and gives them their own thread
+   */
   def startServer(): Unit ={
     println("FTP Server Started...")
     println("Created by: Connor May")
@@ -34,11 +37,6 @@ object ScalaFTPServerObject {
       }
     }
   }
-
-  //TODO: Change to using different message protocol to make parsing messages easier
-
-
-
 
   def main(args: Array[String]): Unit = {
     startServer()

@@ -4,6 +4,10 @@ import java.io.{BufferedReader, DataInputStream, File, FileNotFoundException, In
 import java.net.Socket
 import scala.collection.mutable
 
+/**
+ * A thread to handle incoming server requests
+ * @param socketInput the socket connection the thread is listening to
+ */
 class ServerReader(val socketInput : Socket) extends Thread{
   val socket = socketInput
   var incomingMessage = ""
@@ -12,6 +16,11 @@ class ServerReader(val socketInput : Socket) extends Thread{
   var currentString = ""
   var buildingString = false
   val outputWriter = new PrintWriter(socket.getOutputStream, true)
+
+  /**
+   * Thread's "main" function
+   * handles commands and responds accordingly
+   */
   override def run(): Unit = {
     println(s"New Connection made!\nReady and listening to client: ${socket.getRemoteSocketAddress}")
     println(s"Socket ${socket.getRemoteSocketAddress} connection status: ${socket.isConnected}")
@@ -20,7 +29,6 @@ class ServerReader(val socketInput : Socket) extends Thread{
         val temp = inputReader.readLine()
         if(temp != ""){
           incomingMessage = temp
-          //messageQueue.addOne(incomingMessage)
           temp match {
             case "startMessage" => buildingString = true
             case "endMessage" => {
@@ -46,10 +54,20 @@ class ServerReader(val socketInput : Socket) extends Thread{
     }
     socket.close()
   }
+
+  /**
+   * A getter for the messageQueue in case the message handling needs to be done somewhere else
+   * @return
+   */
   def getMessageQueue (): mutable.Queue[String] ={
     messageQueue
   }
 
+  /**
+   * Handles messages and does the commands it parsed
+   * @param input message string
+   * @return true if it successfully parsed a command and false if there was an error or the command wasn't recognized
+   */
   def messageHandler(input: String): Boolean ={
     var messageHandled = false
     val command = input.split("command ")(1).split(" ")
@@ -74,7 +92,7 @@ class ServerReader(val socketInput : Socket) extends Thread{
         val endIndex = input.indexOf("endFile")
         val fileContents = input.substring(startIndex, endIndex)
         if(printWriter != None ){
-          printWriter.asInstanceOf[PrintWriter].write(fileContents) //How to do type casting in Scala
+          printWriter.asInstanceOf[PrintWriter].write(fileContents)
         }
         if(exceptionThrown){
           messageHandled = false
@@ -92,6 +110,11 @@ class ServerReader(val socketInput : Socket) extends Thread{
     messageHandled
   }
 
+  /**
+   * For use in the remove method
+   * @param path path and filename
+   * @return None
+   */
   private def deleteFile(path: String) = {
     val fileTemp = new File(path)
     if (fileTemp.exists) {

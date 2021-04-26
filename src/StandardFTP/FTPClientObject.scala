@@ -8,6 +8,9 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.PBEKeySpec
 import java.security.spec.KeySpec
 
+/**
+ * Encompasses all Client side code
+ */
 object FTPClientObject {
 
   val USAGE_STRING = "USAGE:\n" +
@@ -19,6 +22,11 @@ object FTPClientObject {
     "list [client | server] ->\tLists the current directory contents of client or server respectively\n" +
     "cat [filename] ->\t\t\tOutputs file contents to terminal"
 
+  /**
+   * Gets a list of the files in the given directory
+   * @param dir directory to list files in
+   * @return List of all the files in the given directory
+   */
   def getListOfFiles(dir: String):List[File] = {
     val d = new File(dir)
     if (d.exists && d.isDirectory) {
@@ -28,6 +36,12 @@ object FTPClientObject {
     }
   }
 
+  /**
+   * Prompts user for username and password. Then hashes the password and sends it to the server.
+   * Uses SHA1 algorithm for encryption
+   * @param out Output Stream for Socket
+   * @param in Input Stream for Socket
+   */
   def getCredentials(out: PrintStream, in: BufferedReader): Unit ={
     val random = new SecureRandom()
     val salt = new Array[Byte](16)
@@ -46,6 +60,11 @@ object FTPClientObject {
 
   }
 
+  /**
+   * Handles arguments for Client side.
+   * Reads commands on command line and responds accordingly
+   * @param args [ip address] [port number]
+   */
   def main(args: Array[String]): Unit = {
     Thread.sleep(500)
     val socket = new Socket(args(0), args(1).toInt)
@@ -81,7 +100,6 @@ object FTPClientObject {
           }else{
             val fileContents = source.getLines mkString "\n"
             println("Writing File...")
-            //TODO: Change Message protocol to be easier to parse and not use XML
             out.println("startMessage")
             out.println("command add " + firstArg(1))
             out.println("startFile")
@@ -98,8 +116,6 @@ object FTPClientObject {
             currentFiles.foreach(f => println(s"${f.getName}"))
             println()
           }else{
-            //TODO: read files from server
-
             out.print("command: list")
           }
         }
@@ -108,12 +124,17 @@ object FTPClientObject {
           out.println("command remove " + firstArg(1))
           out.println("endMessage")
         }
+        case "request" => {
+          println()
+          //TODO: read and save files from socket
+        }
         case _ => println(USAGE_STRING)
       }
       println()
       print("Enter Command: ")
     }
   }
+
 
 
 

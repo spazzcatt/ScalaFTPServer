@@ -5,6 +5,7 @@ import scala.collection.mutable.ListBuffer
 
 /**
  * Uses Java ServerSocket to provide abstraction and give immutable messages back
+ * @DEPRECIATED (was originally going to do it here but opted for different organization
  */
 
 class ServerSocketAcceptor {
