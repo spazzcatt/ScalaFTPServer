@@ -91,6 +91,7 @@ object FTPClientObject {
             println("Wrote File. Awaiting Confirmation...")
             val confirmation = in.readLine()
             println(s"Received: $confirmation")
+
           }
         }
         case "list" => {
