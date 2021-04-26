@@ -28,9 +28,11 @@ class ServerReader(val socketInput : Socket) extends Thread{
               println("Command built: " + currentString)
               val ishandled = messageHandler(currentString)
               if(ishandled){
-                outputWriter.write("command complete")
+                outputWriter.write("commandStatus complete")
+                println("wrote: commandStatus complete")
               }else{
-                outputWriter.write("command incomplete ERROR")
+                println("wrote: commandStatus incomplete ERROR")
+                outputWriter.write("commandStatus incomplete ERROR")
               }
               messageQueue.addOne(currentString)
               currentString = ""
@@ -59,10 +61,14 @@ class ServerReader(val socketInput : Socket) extends Thread{
         }
         println(s"adding file: $filename")
         var printWriter : Any = None
+        var exceptionThrown = false
         try{
           printWriter = new PrintWriter(new File(filename))
         }catch {
-          case e: FileNotFoundException => println("File not found exception thrown")
+          case e: FileNotFoundException => {
+            println("File not found exception thrown")
+            exceptionThrown = true
+          }
         }
         val startIndex = input.indexOf("startFile")
         val endIndex = input.indexOf("endFile")
@@ -70,15 +76,27 @@ class ServerReader(val socketInput : Socket) extends Thread{
         if(printWriter != None ){
           printWriter.asInstanceOf[PrintWriter].write(fileContents) //How to do type casting in Scala
         }
-        println("message handled add")
-        messageHandled = true
+        if(exceptionThrown){
+          messageHandled = false
+        }else{
+          messageHandled = true
+          println("message handled add")
+        }
+      case "remove" => {
+        val filename = input.split("command: add ")(0)
+        deleteFile(filename)
+      }
       case _ =>
         println("message not handled: " + command )
     }
-    if(messageHandled){
-      println("message handled")
-    }
     messageHandled
+  }
+
+  private def deleteFile(path: String) = {
+    val fileTemp = new File(path)
+    if (fileTemp.exists) {
+      fileTemp.delete()
+    }
   }
 }
 

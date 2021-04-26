@@ -88,10 +88,6 @@ object FTPClientObject {
             out.println(fileContents)
             out.println("endFile")
             out.println("endMessage")
-            println("Wrote File. Awaiting Confirmation...")
-            val confirmation = in.readLine()
-            println(s"Received: $confirmation")
-
           }
         }
         case "list" => {
@@ -106,6 +102,11 @@ object FTPClientObject {
 
             out.print("command: list")
           }
+        }
+        case "remove" => {
+          out.print("startMessage")
+          out.println("command remove " + firstArg(1))
+          out.println("endMessage")
         }
         case _ => println(USAGE_STRING)
       }
