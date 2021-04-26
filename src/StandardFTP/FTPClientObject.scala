@@ -82,16 +82,12 @@ object FTPClientObject {
             val fileContents = source.getLines mkString "\n"
             println("Writing File...")
             //TODO: Change Message protocol to be easier to parse and not use XML
-            /*
-            val message : scala.xml.Elem =
-              <message>
-                <command>add</command>
-                <filename>$firstArg(1)</filename>
-                <filecontents>$fileContents</filecontents>
-              </message>
-            out.println(message)
-
-             */
+            out.println("startMessage")
+            out.println("command add " + firstArg(1))
+            out.println("startFile")
+            out.println(fileContents)
+            out.println("endFile")
+            out.println("endMessage")
             println("Wrote File. Awaiting Confirmation...")
             val confirmation = in.readLine()
             println(s"Received: $confirmation")
@@ -104,7 +100,10 @@ object FTPClientObject {
             println("Current Files In Client Directory:")
             currentFiles.foreach(f => println(s"${f.getName}"))
             println()
+          }else{
+            //TODO: read files from server
 
+            out.print("command: list")
           }
         }
         case _ => println(USAGE_STRING)

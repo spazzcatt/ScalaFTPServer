@@ -2,8 +2,7 @@ package StandardFTP
 
 import java.net.ServerSocket
 import scala.collection.mutable.ListBuffer
-import java.io.BufferedReader
-import java.io.InputStreamReader
+import java.io.{BufferedReader, File, InputStreamReader, PrintWriter}
 import java.net.URL
 
 /*
@@ -35,19 +34,26 @@ object ScalaFTPServerObject {
       }
       //TODO: call message handler on first message in message queue
       //This should loop around and call the first message on every thread giving equal opportunity to each thread
-      readerList.foreach(f => f.messageQueue)
+      readerList.foreach(f => messageHandler(f.messageQueue.head))
 
     }
   }
 
   //TODO: Change to using different message protocol to make parsing messages easier
-  /*
+
   def messageHandler(input: String): Unit ={
-    input match {
-      case
+    input.split("command: ")(0) match {
+      case "add" =>
+        val filename = input.split("command: add ")(0)
+        println(s"adding file: $filename")
+        val printWriter = new PrintWriter(new File(filename))
+        val startIndex = input.indexOf("startFile")
+        val endIndex = input.indexOf("endFile")
+        val fileContents = input.substring(startIndex, endIndex)
+        printWriter.write(fileContents)
     }
   }
-   */
+
 
   def main(args: Array[String]): Unit = {
     startServer()
